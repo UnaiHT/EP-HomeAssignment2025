@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.DataContext;
+using DataAccess.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,9 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<PollDbContext>();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<PollRepository>();
+
 
 var app = builder.Build();
 
