@@ -31,45 +31,55 @@ namespace Presentation.Controllers
         }
 
         // GET: PollController/Create
-        public ActionResult Create()
+        [HttpGet]
+        public IActionResult Create()
         {
-            return View();
+            Poll myModel = new Poll();
+
+            return View(myModel);
         }
 
         // POST: PollController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public IActionResult Create(Poll poll, [FromServices] IWebHostEnvironment host)
         {
-            try
+            if (_pollRepository.GetPoll(poll.Id) != null)
             {
-                return RedirectToAction(nameof(Index));
+                TempData["error"] = "Poll already exists";
+                return RedirectToAction("Index");
             }
-            catch
+            else
             {
-                return View();
+                _pollRepository.CreatePoll(poll);
+                TempData["message"] = "Poll was created successfully";
+
+                return RedirectToAction("Index");
+
+                /*
+                Poll myModel = new Poll();
+                myModel = poll; //Passing the same instance back to the page so that i show the end user the same data they gave me
+
+                return View(myModel);*/
             }
+
         }
 
-        // GET: PollController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpGet]
+        public IActionResult Vote(int id)
         {
-            return View();
+            var poll = _pollRepository.GetPoll(id);
+
+            return View(poll);
         }
 
-        // POST: PollController/Edit/5
+        
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public IActionResult Vote(Poll poll)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _pollRepository.UpdatePoll(poll);
+            TempData["message"] = "Vote have been registered successfully";
+
+            return RedirectToAction("Index");
         }
 
         // GET: PollController/Delete/5

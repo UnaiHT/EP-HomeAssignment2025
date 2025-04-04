@@ -1,0 +1,31 @@
+﻿@model Domain.Models.Poll
+
+<div class="col-md-4 mb-4">
+    <div class="card" style="width: 100%;">
+
+        <div class="card-body">
+            <h5 class="card-title">@Model.Title</h5>
+
+
+            <form action="/Poll/Vote" method="post" class="container mt-4" enctype="multipart/form-data">
+                <div class="row">
+                
+                    <label>
+                        <input type="radio" name="@Model.Option1Text" value="Option1"> Option 1
+                    </label>
+                    <label>
+                        <input type="radio" name="@Model.Option2Text" value="Option2"> Option 2
+                    </label>
+                    <label>
+                        <input type="radio" name="@Model.Option3Text" value="Option3"> Option 3
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Vote</button>
+            </form>
+            
+
+            
+        </div>
+    </div>
+</div>

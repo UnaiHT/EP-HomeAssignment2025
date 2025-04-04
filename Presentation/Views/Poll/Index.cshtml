@@ -1,3 +1,25 @@
-﻿<p>
-	PP
-</p>
+﻿@model IEnumerable<Domain.Models.Poll>
+
+<div class="row">
+    @foreach (var poll in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card" style="width: 100%;">
+                
+                <div class="card-body">
+                    <h5 class="card-title">@poll.Title&nbsp</h5>
+
+                    <a href="/Polls/Vote/@poll.Id" class="btn btn-primary">Vote</a>
+                    
+                    <a href="/Polls/Edit/@poll.Id" class="btn btn-primary">Update Details</a>
+
+                    <a href="/Polls/Delete?id=@poll.Id" class="btn btn-primary" onclick="return confirm('Are you sure ?');">Delete Poll</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div>
+    <a href="Poll/Create" class="btn btn-primary">Create New</a>
+</div>
