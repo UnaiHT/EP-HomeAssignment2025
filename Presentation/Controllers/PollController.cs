@@ -19,7 +19,7 @@ namespace Presentation.Controllers
         // GET: PollController
         public IActionResult Index()
         {
-            var polls = _pollRepository.GetPolls();
+            var polls = _pollRepository.GetPolls().OrderByDescending(p => p.DateCreated);
 
             return View(polls);
         }
@@ -69,17 +69,49 @@ namespace Presentation.Controllers
         {
             var poll = _pollRepository.GetPoll(id);
 
-            return View(poll);
+            if (poll == null)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View(poll);
+            }
         }
 
         
         [HttpPost]
-        public IActionResult Vote(Poll poll)
+        public IActionResult Vote(Poll poll, string option)
         {
-            _pollRepository.UpdatePoll(poll);
-            TempData["message"] = "Vote have been registered successfully";
+            switch (option)
+            {
+                case "Option1":
+                    poll.Option1VotesCount += 1;
+                    break;
+                case "Option2":
+                    poll.Option2VotesCount += 1;
+                    break;
+                case "Option3":
+                    poll.Option3VotesCount += 1;
+                    break;
+                default:
+                    return BadRequest("Invalid option selected.");
+            }
+
+            _pollRepository.Vote(poll);
+            TempData["message"] = "Vote has been registered successfully";
 
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult Results(int id)
+        {
+            var poll = _pollRepository.GetPoll(id);
+
+            var totalVotes = poll.Option1VotesCount + poll.Option2VotesCount + poll.Option3VotesCount;
+
+            return View(poll);
         }
 
         // GET: PollController/Delete/5

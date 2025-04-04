@@ -9,11 +9,11 @@
                 <div class="card-body">
                     <h5 class="card-title">@poll.Title&nbsp</h5>
 
-                    <a href="/Polls/Vote/@poll.Id" class="btn btn-primary">Vote</a>
-                    
-                    <a href="/Polls/Edit/@poll.Id" class="btn btn-primary">Update Details</a>
+                    <a href="/Poll/Vote/@poll.Id" class="btn btn-primary">Vote</a>
 
-                    <a href="/Polls/Delete?id=@poll.Id" class="btn btn-primary" onclick="return confirm('Are you sure ?');">Delete Poll</a>
+                    <a href="/Poll/Results/@poll.Id" class="btn btn-primary">Results</a>
+
+                    <a href="/Poll/Delete?id=@poll.Id" class="btn btn-primary" onclick="return confirm('Are you sure ?');">Delete Poll</a>
                 </div>
             </div>
         </div>

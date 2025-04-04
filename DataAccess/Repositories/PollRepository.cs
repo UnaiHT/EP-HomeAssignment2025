@@ -37,13 +37,9 @@ namespace DataAccess.Repositories
             _pollContext.SaveChanges();
         }
 
-        public void UpdatePoll(Poll p)
+        public void Vote(Poll p)
         {
             var oldPoll = GetPoll(p.Id);
-            oldPoll.Title = p.Title;
-            oldPoll.Option1Text = p.Option1Text;
-            oldPoll.Option2Text = p.Option2Text;
-            oldPoll.Option3Text = p.Option3Text;
             oldPoll.Option1VotesCount = p.Option1VotesCount;
             oldPoll.Option2VotesCount = p.Option2VotesCount;
             oldPoll.Option3VotesCount = p.Option3VotesCount;

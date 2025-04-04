@@ -9,15 +9,17 @@
 
             <form action="/Poll/Vote" method="post" class="container mt-4" enctype="multipart/form-data">
                 <div class="row">
-                
+                       
+                    <input type="hidden" name="id" value="@Model.Id" />
+
                     <label>
-                        <input type="radio" name="@Model.Option1Text" value="Option1"> Option 1
+                        <input type="radio" name="option" value="Option1"> @Model.Option1Text
                     </label>
                     <label>
-                        <input type="radio" name="@Model.Option2Text" value="Option2"> Option 2
+                        <input type="radio" name="option" value="Option2"> @Model.Option2Text
                     </label>
                     <label>
-                        <input type="radio" name="@Model.Option3Text" value="Option3"> Option 3
+                        <input type="radio" name="option" value="Option3"> @Model.Option3Text
                     </label>
                 </div>
 
