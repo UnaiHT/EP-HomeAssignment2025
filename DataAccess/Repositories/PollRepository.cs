@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using DataAccess.DataContext;
 using Domain.Models;
+using Domain.Interfaces;
 
 namespace DataAccess.Repositories
 {
-    public class PollRepository
+    public class PollRepository: IPollsRepository
     {
         private PollDbContext _pollContext;
 
@@ -40,9 +41,9 @@ namespace DataAccess.Repositories
         public void Vote(Poll p)
         {
             var oldPoll = GetPoll(p.Id);
-            oldPoll.Option1VotesCount = p.Option1VotesCount;
-            oldPoll.Option2VotesCount = p.Option2VotesCount;
-            oldPoll.Option3VotesCount = p.Option3VotesCount;
+            oldPoll.Option1VotesCount += p.Option1VotesCount;
+            oldPoll.Option2VotesCount += p.Option2VotesCount;
+            oldPoll.Option3VotesCount += p.Option3VotesCount;
             _pollContext.SaveChanges();
         }
     }

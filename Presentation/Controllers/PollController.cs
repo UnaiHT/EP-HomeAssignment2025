@@ -2,14 +2,15 @@
 using Microsoft.AspNetCore.Mvc;
 using DataAccess.Repositories;
 using Domain.Models;
+using Domain.Interfaces;
 
 namespace Presentation.Controllers
 {
     public class PollController : Controller
     {
-        PollRepository _pollRepository;
+        IPollsRepository _pollRepository;
 
-        public PollController(PollRepository pollRepository)
+        public PollController(IPollsRepository pollRepository)
         {
             _pollRepository = pollRepository;
         }
