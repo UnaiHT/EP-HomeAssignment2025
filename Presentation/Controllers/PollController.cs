@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using DataAccess.Repositories;
 using Domain.Models;
 using Domain.Interfaces;
+using System.Security.Claims;
 
 namespace Presentation.Controllers
 {
@@ -44,31 +45,29 @@ namespace Presentation.Controllers
         [HttpPost]
         public IActionResult Create(Poll poll, [FromServices] IWebHostEnvironment host)
         {
-            if (_pollRepository.GetPoll(poll.Id) != null)
-            {
-                TempData["error"] = "Poll already exists";
-                return RedirectToAction("Index");
-            }
-            else
+            if (ModelState.IsValid)
             {
                 _pollRepository.CreatePoll(poll);
                 TempData["message"] = "Poll was created successfully";
 
                 return RedirectToAction("Index");
 
-                /*
-                Poll myModel = new Poll();
-                myModel = poll; //Passing the same instance back to the page so that i show the end user the same data they gave me
-
-                return View(myModel);*/
             }
+            TempData["error"] = "Check your inputs";
+
+                
+            Poll myModel = new Poll();
+            myModel = poll;
+
+            return View(myModel);
+
 
         }
 
         [HttpGet]
         public IActionResult Vote(int id)
         {
-            var poll = _pollRepository.GetPoll(id);
+            var poll = _pollRepository.GetPolls().SingleOrDefault(x => x.Id == id);
 
             if (poll == null)
             {
@@ -76,7 +75,27 @@ namespace Presentation.Controllers
             }
             else
             {
-                return View(poll);
+                if (User.Identity.IsAuthenticated)
+                {
+                    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                    var votes = _pollRepository.GetVotes(id).Where(x=>x.UserFK==userId);
+
+                    if (!votes.Any())
+                    {
+                        return View(poll);
+                    }
+                    else
+                    {
+                        TempData["error"] = "You have already voted in this poll!";
+                        return RedirectToAction("Index");
+                    }
+                }
+                else
+                {
+                    TempData["error"] = "You need to be connected to vote in a poll!";
+                    return RedirectToAction("Index");
+                }
             }
         }
 
@@ -98,8 +117,9 @@ namespace Presentation.Controllers
                 default:
                     return BadRequest("Invalid option selected.");
             }
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            _pollRepository.Vote(poll);
+            _pollRepository.Vote(poll, userId);
             TempData["message"] = "Vote has been registered successfully";
 
             return RedirectToAction("Index");
@@ -108,7 +128,7 @@ namespace Presentation.Controllers
         [HttpGet]
         public ActionResult Results(int id)
         {
-            var poll = _pollRepository.GetPoll(id);
+            var poll = _pollRepository.GetPolls().SingleOrDefault(x => x.Id == id);
 
             var totalVotes = poll.Option1VotesCount + poll.Option2VotesCount + poll.Option3VotesCount;
 

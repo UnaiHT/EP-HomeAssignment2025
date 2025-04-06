@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DataAccess.DataContext;
 using Domain.Models;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace DataAccess.Repositories
 {
@@ -23,11 +24,6 @@ namespace DataAccess.Repositories
             return _pollContext.Polls;
         }
 
-        public Poll GetPoll(int id)
-        {
-            return _pollContext.Polls.SingleOrDefault(x => x.Id == id);
-        }
-
         public void CreatePoll(Poll p)
         {
             p.DateCreated = DateTime.Now;
@@ -38,13 +34,24 @@ namespace DataAccess.Repositories
             _pollContext.SaveChanges();
         }
 
-        public void Vote(Poll p)
+        public void Vote(Poll p, string id)
         {
-            var oldPoll = GetPoll(p.Id);
+
+            var oldPoll = GetPolls().SingleOrDefault(x => x.Id == p.Id);;
             oldPoll.Option1VotesCount += p.Option1VotesCount;
             oldPoll.Option2VotesCount += p.Option2VotesCount;
             oldPoll.Option3VotesCount += p.Option3VotesCount;
+
+            var vote = new Vote();
+            vote.PollFK = oldPoll.Id;
+            vote.UserFK = id;
+            _pollContext.Votes.Add(vote);
             _pollContext.SaveChanges();
+        }
+
+        public IQueryable<Vote> GetVotes(int id)
+        {
+            return _pollContext.Votes.Where(x=>x.PollFK==id);
         }
     }
 }

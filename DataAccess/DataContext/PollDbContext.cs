@@ -10,7 +10,7 @@ using Domain.Models;
 
 namespace DataAccess.DataContext
 {
-    public class PollDbContext : IdentityDbContext<IdentityUser>
+    public class PollDbContext : IdentityDbContext<CustomUser>
     {
 
         public PollDbContext(DbContextOptions<PollDbContext> options) : base(options)
@@ -18,5 +18,7 @@ namespace DataAccess.DataContext
         }
 
         public DbSet<Poll> Polls { get; set; }
+
+        public DbSet<Vote> Votes { get; set; }
     }
 }

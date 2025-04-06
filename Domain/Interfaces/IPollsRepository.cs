@@ -14,8 +14,8 @@ namespace Domain.Interfaces
 
         IQueryable<Poll> GetPolls();
 
-        Poll GetPoll(int id);
+        void Vote(Poll poll, string id);
 
-        void Vote(Poll poll);
+        IQueryable<Vote> GetVotes(int id);
     }
 }

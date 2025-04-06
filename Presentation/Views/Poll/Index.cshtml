@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<Domain.Models.Poll>
 
+@{
+    ViewData["Title"] = "Index";
+}
+
 <div class="row">
     @foreach (var poll in Model)
     {
@@ -12,8 +16,6 @@
                     <a href="/Poll/Vote/@poll.Id" class="btn btn-primary">Vote</a>
 
                     <a href="/Poll/Results/@poll.Id" class="btn btn-primary">Results</a>
-
-                    <a href="/Poll/Delete?id=@poll.Id" class="btn btn-primary" onclick="return confirm('Are you sure ?');">Delete Poll</a>
                 </div>
             </div>
         </div>
