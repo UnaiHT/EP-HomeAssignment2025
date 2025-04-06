@@ -19,10 +19,7 @@ namespace Domain.Models
         [ForeignKey("PollFK")]
         public virtual Poll Poll { get; set; }
 
-        public string UserFK { get; set; }
+        public string UserId { get; set; }
 
-        //Navigational property
-        [ForeignKey("UserFK")]
-        public virtual CustomUser User { get; set; }
     }
 }

@@ -64,7 +64,7 @@ namespace DataAccess.Repositories
             var votes = GetVotes(oldPoll.Id).ToList();
             var vote = new Vote();
             vote.PollFK = oldPoll.Id;
-            vote.UserFK = id;
+            vote.UserId = id;
             votes.Add(vote);
 
             string pollContents = JsonConvert.SerializeObject(polls);

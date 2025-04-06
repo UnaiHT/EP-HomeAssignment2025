@@ -12,10 +12,13 @@
                 
                 <div class="card-body">
                     <h5 class="card-title">@poll.Title&nbsp</h5>
+                    <div class="mt-3">
+                        <a href="/Poll/Vote/@poll.Id" class="btn btn-primary">Vote</a>
 
-                    <a href="/Poll/Vote/@poll.Id" class="btn btn-primary">Vote</a>
-
-                    <a href="/Poll/Results/@poll.Id" class="btn btn-primary">Results</a>
+                        <a href="/Poll/Results/@poll.Id" class="btn btn-primary">Results</a>
+                        
+                    </div>
+                    
                 </div>
             </div>
         </div>

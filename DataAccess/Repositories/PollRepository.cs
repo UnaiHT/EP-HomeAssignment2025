@@ -44,7 +44,7 @@ namespace DataAccess.Repositories
 
             var vote = new Vote();
             vote.PollFK = oldPoll.Id;
-            vote.UserFK = id;
+            vote.UserId = id;
             _pollContext.Votes.Add(vote);
             _pollContext.SaveChanges();
         }

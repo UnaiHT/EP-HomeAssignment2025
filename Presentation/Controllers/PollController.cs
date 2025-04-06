@@ -9,19 +9,10 @@ namespace Presentation.Controllers
 {
     public class PollController : Controller
     {
-        IPollsRepository _pollRepository;
-
-        public PollController(IPollsRepository pollRepository)
-        {
-            _pollRepository = pollRepository;
-        }
-
-
-
         // GET: PollController
-        public IActionResult Index()
+        public IActionResult Index([FromServices] IPollsRepository pollRepository)
         {
-            var polls = _pollRepository.GetPolls().OrderByDescending(p => p.DateCreated);
+            var polls = pollRepository.GetPolls().OrderByDescending(p => p.DateCreated);
 
             return View(polls);
         }
@@ -43,11 +34,11 @@ namespace Presentation.Controllers
 
         // POST: PollController/Create
         [HttpPost]
-        public IActionResult Create(Poll poll, [FromServices] IWebHostEnvironment host)
+        public IActionResult Create(Poll poll, [FromServices] IPollsRepository pollRepository)
         {
             if (ModelState.IsValid)
             {
-                _pollRepository.CreatePoll(poll);
+                pollRepository.CreatePoll(poll);
                 TempData["message"] = "Poll was created successfully";
 
                 return RedirectToAction("Index");
@@ -65,9 +56,9 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public IActionResult Vote(int id)
+        public IActionResult Vote(int id, [FromServices] IPollsRepository pollRepository)
         {
-            var poll = _pollRepository.GetPolls().SingleOrDefault(x => x.Id == id);
+            var poll = pollRepository.GetPolls().SingleOrDefault(x => x.Id == id);
 
             if (poll == null)
             {
@@ -79,7 +70,7 @@ namespace Presentation.Controllers
                 {
                     var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                    var votes = _pollRepository.GetVotes(id).Where(x=>x.UserFK==userId);
+                    var votes = pollRepository.GetVotes(id).Where(x=>x.UserId==userId);
 
                     if (!votes.Any())
                     {
@@ -101,7 +92,7 @@ namespace Presentation.Controllers
 
         
         [HttpPost]
-        public IActionResult Vote(Poll poll, string option)
+        public IActionResult Vote(Poll poll, string option, [FromServices] IPollsRepository pollRepository)
         {
             switch (option)
             {
@@ -119,41 +110,22 @@ namespace Presentation.Controllers
             }
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            _pollRepository.Vote(poll, userId);
+            pollRepository.Vote(poll, userId);
             TempData["message"] = "Vote has been registered successfully";
 
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        public ActionResult Results(int id)
+        public ActionResult Results(int id, [FromServices] IPollsRepository pollRepository)
         {
-            var poll = _pollRepository.GetPolls().SingleOrDefault(x => x.Id == id);
+            var poll = pollRepository.GetPolls().SingleOrDefault(x => x.Id == id);
 
             var totalVotes = poll.Option1VotesCount + poll.Option2VotesCount + poll.Option3VotesCount;
 
             return View(poll);
         }
 
-        // GET: PollController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: PollController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+              
     }
 }
